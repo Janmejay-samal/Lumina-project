@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Lumina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #44ff44;
+            --error: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob:nth-child(2) {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            width: 400px;
+            height: 400px;
+            top: 60%;
+            left: 60%;
+            animation: move2 25s infinite alternate;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(-10%, -10%);
+            }
+            100% {
+                transform: translate(20%, 30%);
+            }
+        }
+
+        @keyframes move2 {
+            0% {
+                transform: translate(10%, 10%);
+            }
+            100% {
+                transform: translate(-20%, -20%);
+            }
+        }
+
+        /* Modal Card */
+        .login-modal {
+            width: 420px;
+            padding: 45px 40px;
+            border-radius: 32px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            color: var(--text);
+            position: relative;
+            animation: pop .5s ease;
+            z-index: 1;
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: scale(.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .login-modal h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Close button */
+        .close-modal {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: .6;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            transition: .3s;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Floating fields */
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            outline: none;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+            transition: .3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group label {
+            position: absolute;
+            top: -10px;
+            left: 12px;
+            font-size: 12px;
+            background: rgba(5, 5, 5, 0.8);
+            color: var(--primary);
+            padding: 0 8px;
+            border-radius: 4px;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Input icons */
+        .input-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 18px;
+        }
+
+        /* Button */
+        .btn-primary {
+            margin-top: 15px;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            transition: .3s;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 242, 255, 0.3);
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        /* Footer text */
+        .modal-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 5px;
+            transition: 0.3s;
+        }
+
+        .modal-footer a:hover {
+            text-shadow: 0 0 10px var(--primary);
+            text-decoration: underline;
+        }
+
+        /* Messages styling */
+        .messages {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .messages li {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .messages .success {
+            background: rgba(68, 255, 68, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(68, 255, 68, 0.3);
+        }
+
+        .messages .error {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        /* Forgot password link */
+        .forgot-password {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .forgot-password a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary);
+        }
+
+        /* Back to home link */
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            transition: 0.3s;
+            font-size: 14px;
+            z-index: 2;
+        }
+
+        .back-home:hover {
+            border-color: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .back-home span {
+            font-size: 18px;
+        }
+
+        /* Demo credentials */
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--glass-border);
+            border-radius: 10px;
+            font-size: 12px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .demo-credentials span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-modal {
+                width: 100%;
+                padding: 35px 25px;
+            }
+
+            .back-home {
+                top: 10px;
+                left: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gradient-bg">
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <a href="{% url 'home' %}" class="back-home">
+        <span>←</span> Back to Home
+    </a>
+
+    <div class="login-modal" id="loginModal">
+        <div class="close-modal" id="closeModal" onclick="closeModal()">✕</div>
+
+        <h2>Welcome Back</h2>
+
+        <!-- Display messages -->
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <input type="text" name="username" id="username" value="{{ username|default:'' }}" required>
+                <label for="username">Username</label>
+                <span class="input-icon">👤</span>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" id="password" required>
+                <label for="password">Password</label>
+                <span class="input-icon">🔒</span>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                ✦ Sign In ✦
+            </button>
+        </form>
+
+        <!-- Demo credentials for testing -->
+        <div class="demo-credentials">
+            <div>Demo: <span>admin</span> / <span>password123</span></div>
+        </div>
+
+        <div class="modal-footer">
+            Don't have an account?
+            <a href="{% url 'register' %}">Create account</a>
+        </div>
+    </div>
+
+    <script>
+        // Close modal function
+        function closeModal() {
+            document.getElementById("loginModal").style.animation = "popOut 0.3s ease forwards";
+            setTimeout(() => {
+                window.location.href = "{% url 'home' %}";
+            }, 300);
+        }
+
+        // Add animation for popOut
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes popOut {
+                from {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: scale(.9) translateY(20px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+            }
+        });
+
+        // Add floating animation to form fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1 + 0.2}s`;
+            });
+
+            const button = document.querySelector('.btn-primary');
+            button.style.animation = `fadeInUp 0.5s ease forwards 0.5s`;
+
+            // Add fadeIn animation
+            const animStyle = document.createElement('style');
+            animStyle.textContent = `
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                .form-group, .btn-primary {
+                    opacity: 0;
+                }
+            `;
+            document.head.appendChild(animStyle);
+        });
+    </script>
+</body>
+</html>

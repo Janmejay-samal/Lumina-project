@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina | About</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --text: #ffffff;
+            --glass: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
+            --logout: #ff4757;
+            --logout-hover: #ff6b81;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        body {
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob:nth-child(2) {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            width: 400px;
+            height: 400px;
+            top: 60%;
+            left: 60%;
+            animation: move2 25s infinite alternate;
+        }
+        
+        @keyframes move {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(20%, 30%); }
+        }
+
+        @keyframes move2 {
+            0% { transform: translate(10%, 10%); }
+            100% { transform: translate(-20%, -20%); }
+        }
+        
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(5, 5, 5, 0.8);
+        }
+        
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.7;
+            transition: 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-links a.active {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .nav-cta {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-cta form {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Logout Button Styles - Red Theme */
+        .btn-logout {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: .3px;
+            transition: all .3s ease;
+            display: inline-block;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 71, 87, 0.25);
+            color: #ff6b81;
+            border-color: rgba(255, 71, 87, 0.6);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.4);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        /* Login Button Styles - Blue Theme */
+        .btn-login {
+            background: rgba(0, 242, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: .3px;
+            transition: all .3s ease;
+            display: inline-block;
+        }
+
+        .btn-login:hover {
+            background: rgba(0, 242, 255, 0.25);
+            color: var(--primary);
+            border-color: rgba(0, 242, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px) scale(1.03);
+        }
+        
+        /* Main content with proper padding to avoid navbar overlap */
+        main {
+            padding-top: 120px;
+            min-height: calc(100vh - 100px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5% 4rem;
+        }
+        
+        /* About Header Section */
+        .about-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .about-header h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+            }
+        }
+        
+        .about-header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.7;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* About Cards Grid */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .about-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+        
+        .about-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 50px rgba(0, 242, 255, 0.15);
+        }
+        
+        .about-card.large-card {
+            grid-column: span 2;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .about-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .about-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            opacity: 0.9;
+        }
+        
+        .about-card p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .quote-text {
+            font-size: 1.6rem !important;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--primary);
+            opacity: 1 !important;
+            margin-bottom: 2rem !important;
+            line-height: 1.4;
+        }
+        
+        .highlight-text {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--glass-border);
+        }
+        
+        .timeline-year {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 80px;
+        }
+        
+        .timeline-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content p {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .values-list {
+            list-style: none;
+        }
+        
+        .values-list li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .values-list li::before {
+            content: "✦";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .team-section {
+            margin-top: 5rem;
+            text-align: center;
+        }
+        
+        .team-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .team-member {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        
+        .team-member:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.15);
+        }
+        
+        .member-name {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-role {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        footer {
+            padding: 3rem 5%;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            opacity: 0.5;
+            margin-top: 3rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 5%;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a.active::after {
+                display: none;
+            }
+            
+            main {
+                padding-top: 140px;
+            }
+            
+            .about-card.large-card {
+                grid-column: span 1;
+            }
+            
+            .quote-text {
+                font-size: 1.3rem !important;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg">
+        <div class="blob"></div>
+        <div class="blob"></div> <!-- Added second blob for more visual interest -->
+    </div>
+
+<nav>
+    <a href="{% url 'home' %}" class="logo">LUMINA</a>
+    <ul class="nav-links">
+        <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
+        <li><a href="{% url 'products' %}" {% if request.resolver_match.url_name == 'products' %}class="active"{% endif %}>Products</a></li>
+        <li><a href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>About</a></li>
+        <li><a href="{% url 'contact' %}" {% if request.resolver_match.url_name == 'contact' %}class="active"{% endif %}>Contact</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+        {% else %}
+            <li><a href="{% url 'register' %}" {% if request.resolver_match.url_name == 'register' %}class="active"{% endif %}>Register</a></li>
+        {% endif %}
+    </ul>
+    <div class="nav-cta">
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">🚪 Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+    <main>
+        <div class="about-container">
+            <!-- About Header -->
+            <div class="about-header">
+                <h1>About Lumina</h1>
+                <p class="subtitle">We are pioneers of the invisible — merging light, intelligence, and emotion into devices that feel alive.</p>
+            </div>
+
+            <!-- Main About Content Grid -->
+            <div class="about-grid">
+                <!-- Philosophy Card -->
+                <div class="about-card">
+                    <div class="card-icon">✨</div>
+                    <h2>Our Philosophy</h2>
+                    <p class="quote-text">"Design is not just how it looks, but how it dreams."</p>
+                    <p>Founded on the belief that technology should whisper, not shout. Our team crafts every curve and pixel with the fluidity of thought.</p>
+                    <p class="highlight-text">✧ Lumina: where atoms dance with light.</p>
+                </div>
+
+                <!-- Vision Card -->
+                <div class="about-card">
+                    <div class="card-icon">🚀</div>
+                    <h2>Our Vision</h2>
+                    <p>From quantum-dot displays to neural-adaptive interfaces, we don't follow trends — we imagine what no one else dares.</p>
+                    <p>We're building a future where technology seamlessly integrates with human consciousness, enhancing rather than distracting.</p>
+                </div>
+
+                <!-- Stats Card -->
+                <div class="about-card">
+                    <div class="card-icon">📊</div>
+                    <h2>By The Numbers</h2>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Happy Customers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Design Awards</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Countries</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Card -->
+                <div class="about-card">
+                    <div class="card-icon">⏳</div>
+                    <h2>Our Journey</h2>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2024</div>
+                        <div class="timeline-content">
+                            <h4>Lumina Founded</h4>
+                            <p>Born from a vision to merge technology with minimalist design</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2025</div>
+                        <div class="timeline-content">
+                            <h4>First Product Launch</h4>
+                            <p>Lumina Pro received critical acclaim and industry awards</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2026</div>
+                        <div class="timeline-content">
+                            <h4>Global Expansion</h4>
+                            <p>Now serving customers across 5 continents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Values Card -->
+                <div class="about-card large-card">
+                    <div class="card-icon">💎</div>
+                    <h2>Our Core Values</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div>
+                            <h3>Innovation</h3>
+                            <p>Pushing boundaries and redefining what's possible with every product we create.</p>
+                        </div>
+                        <div>
+                            <h3>Elegance</h3>
+                            <p>Minimalist design that doesn't compromise on functionality or performance.</p>
+                        </div>
+                        <div>
+                            <h3>Integrity</h3>
+                            <p>Building trust through transparency, security, and ethical practices.</p>
+                        </div>
+                        <div>
+                            <h3>Community</h3>
+                            <p>Creating technology that brings people together and enhances human connection.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="team-section">
+                <h2>Meet The Visionaries</h2>
+                <p style="opacity: 0.7; max-width: 600px; margin: 0 auto 3rem;">The brilliant minds behind the Lumina evolution</p>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-name">Janmejay Samal</div>
+                        <div class="member-role">Founder & Creative Director</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-name">Priya Sharma</div>
+                        <div class="member-role">Head of Design</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-name">Arjun Mehta</div>
+                        <div class="member-role">Lead Engineer</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-name">Neha Kapoor</div>
+                        <div class="member-role">Product Strategist</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LUMINA Technologies — Crafted with 💙 in Mumbai. All rights reserved. | {% if user.is_authenticated %}NEXUS ELITE MEMBER{% else %}GUEST{% endif %}</p>
+    </footer>
+
+    <script>
+        // Smooth card animations
+        document.querySelectorAll('.about-card').forEach((card, index) => {
+            card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+        });
+
+        // Add active class based on current URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && currentPath.includes(href) && href !== '/') {
+                    link.classList.add('active');
+                } else if (href === '/' && currentPath === '/') {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .about-card {
+                opacity: 0;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

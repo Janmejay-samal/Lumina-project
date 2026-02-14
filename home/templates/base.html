@@ -1,0 +1,322 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lumina{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #050505;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --logout: #ff4757;
+            --logout-hover: #ff6b81;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050505 100%);
+            min-height: 100vh;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from {
+                transform: translate(-10%, -10%);
+            }
+            to {
+                transform: translate(20%, 30%);
+            }
+        }
+
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(5, 5, 5, 0.8);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.7;
+            transition: 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-links a.active {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .nav-cta {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-logout {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.4);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all .3s ease;
+            display: inline-block;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 71, 87, 0.25);
+            color: #ff6b81;
+            border-color: rgba(255, 71, 87, 0.6);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.4);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .btn-login {
+            background: rgba(0, 242, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all .3s ease;
+            display: inline-block;
+        }
+
+        .btn-login:hover {
+            background: rgba(0, 242, 255, 0.25);
+            color: var(--primary);
+            border-color: rgba(0, 242, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        main {
+            padding-top: 100px;
+            min-height: calc(100vh - 200px);
+        }
+
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            opacity: 0.5;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* Messages styling */
+        .messages {
+            list-style: none;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 5%;
+        }
+
+        .messages li {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .messages .success {
+            background: rgba(68, 255, 68, 0.1);
+            color: #44ff44;
+            border: 1px solid rgba(68, 255, 68, 0.3);
+        }
+
+        .messages .error {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .messages .info {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+        }
+
+        .messages .warning {
+            background: rgba(255, 165, 0, 0.1);
+            color: orange;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a.active::after {
+                display: none;
+            }
+
+            .nav-links a.active {
+                text-shadow: 0 0 10px var(--primary);
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="gradient-bg">
+        <div class="blob"></div>
+    </div>
+
+    <nav>
+        <a href="{% url 'home' %}" class="logo">LUMINA</a>
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_alt' %}class="active"{% endif %}>Home</a></li>
+            <li><a href="{% url 'products' %}" {% if request.resolver_match.url_name == 'products' %}class="active"{% endif %}>Products</a></li>
+            <li><a href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>About</a></li>
+            <li><a href="{% url 'contact' %}" {% if request.resolver_match.url_name == 'contact' %}class="active"{% endif %}>Contact</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
+            {% else %}
+                <li><a href="{% url 'register' %}" {% if request.resolver_match.url_name == 'register' %}class="active"{% endif %}>Register</a></li>
+            {% endif %}
+        </ul>
+        <div class="nav-cta">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">🚪 Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Display messages -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 LUMINA Technologies. All rights reserved. | {% if user.is_authenticated %}NEXUS ELITE MEMBER{% else %}GUEST{% endif %}</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
