@@ -79,6 +79,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--glass-border);
+            background: rgba(5, 5, 5, 0.8);
         }
 
         .logo {
@@ -93,6 +94,7 @@
             text-decoration: none;
         }
 
+        /* Desktop navigation links - visible on desktop */
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -112,17 +114,9 @@
             text-shadow: 0 0 10px var(--primary);
         }
 
+        /* Desktop CTA removed as per unified menu design */
+
         /* Logout Button Styles */
-        .nav-cta {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-cta form {
-            margin: 0;
-            padding: 0;
-        }
-
         .btn-logout {
             background: rgba(255, 71, 87, 0.15);
             color: #ff4757;
@@ -487,17 +481,116 @@
             margin-top: 2rem;
         }
 
+        /* ===== HAMBURGER MENU STYLES (icon on right, login inside) ===== */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 200;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 2rem;
+            height: 2rem;
+            margin-left: auto;  /* push to the right corner */
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: all 0.3s linear;
+            opacity: 0.9;
+        }
+
+        /* Mobile styles */
         @media (max-width: 768px) {
             nav {
-                flex-direction: column;
-                gap: 1rem;
                 padding: 1rem 5%;
+                background: rgba(5, 5, 5, 0.7);
+                flex-wrap: wrap;
             }
 
+            /* Hide the desktop version of nav-links by default on mobile */
             .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 2rem 0 1.5rem 0;
+                border-top: 1px solid var(--glass-border);
+                margin-top: 1rem;
+                background: rgba(5, 5, 5, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 0 0 24px 24px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                display: inline-block;
+                padding: 0.5rem 0;
+                font-size: 1.2rem;
+            }
+
+            /* Styling for the login/logout item inside the menu */
+            .mobile-cta-item {
+                margin-top: 0.5rem;
+                width: 100%;
+                display: flex;
                 justify-content: center;
+            }
+
+            .mobile-cta-item .btn-login,
+            .mobile-cta-item .btn-logout {
+                display: inline-block;
+                min-width: 140px;
+                text-align: center;
+                background: rgba(0, 242, 255, 0.2);
+                border-width: 1px;
+                padding: 0.6rem 1.6rem;
+                border-radius: 999px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all .3s ease;
+                font-family: 'Outfit', sans-serif;
+                font-size: 1rem;
+                border: none;
+                cursor: pointer;
+            }
+
+            .mobile-cta-item .btn-logout {
+                background: rgba(255, 71, 87, 0.2);
+                color: #ff4757;
+                border: 1px solid rgba(255, 71, 87, 0.4);
+            }
+
+            .mobile-cta-item .btn-login {
+                background: rgba(0, 242, 255, 0.15);
+                color: var(--primary);
+                border: 1px solid rgba(0, 242, 255, 0.4);
+            }
+
+            .mobile-cta-item .btn-login:hover,
+            .mobile-cta-item .btn-logout:hover {
+                transform: translateY(-2px) scale(1.03);
+                box-shadow: 0 0 25px currentColor;
+            }
+
+            /* Hamburger visible */
+            .menu-toggle {
+                display: flex;
             }
 
             .content-grid {
@@ -511,6 +604,16 @@
             .stat-card .value {
                 font-size: 2.5rem;
             }
+
+            .dashboard-container {
+                padding-top: 130px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.6rem;
+            }
         }
     </style>
 </head>
@@ -522,7 +625,16 @@
 
     <nav>
         <a href="{% url 'home' %}" class="logo">LUMINA</a>
-        <ul class="nav-links">
+
+        <!-- Three-dot hamburger icon - right corner (unified menu) -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Unified navigation: all links + login/logout inside -->
+        <ul class="nav-links" id="navLinks">
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'products' %}">Products</a></li>
             <li><a href="{% url 'about' %}">About</a></li>
@@ -532,17 +644,20 @@
             {% else %}
                 <li><a href="{% url 'register' %}">Register</a></li>
             {% endif %}
+            <!-- Login/Logout appears here, inside the same list -->
+            <li class="mobile-cta-item">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">🚪 Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
+                {% endif %}
+            </li>
         </ul>
-        <div class="nav-cta">
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-logout">🚪 Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
-            {% endif %}
-        </div>
+
+        <!-- Desktop CTA has been completely removed as per unified menu design -->
     </nav>
 
     <main class="dashboard-container">
@@ -637,10 +752,25 @@
                     Quick Actions
                 </h2>
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Browse New Tech - Goes to products page -->
                     <a href="{% url 'products' %}" class="btn btn-primary">Browse New Tech</a>
-                    <a href="#" class="btn btn-secondary" onclick="alert('You have {{ loyalty_points|default:"8,450" }} points available!')">View Rewards</a>
+                    
+                    <!-- View Rewards - Goes to profile page with points info -->
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'profile' %}" class="btn btn-secondary" onclick="showRewards(event, '{{ loyalty_points|default:"8,450" }}')">View Rewards</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-secondary">Login to View Rewards</a>
+                    {% endif %}
+                    
+                    <!-- Support Nexus - Goes to contact page -->
                     <a href="{% url 'contact' %}" class="btn btn-secondary">Support Nexus</a>
-                    <a href="#" class="btn btn-secondary" onclick="alert('Order history coming soon!')">Order History</a>
+                    
+                    <!-- Order History - Goes to order history page -->
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'order_history' %}" class="btn btn-secondary">Order History</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-secondary">Login to View Orders</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -686,6 +816,57 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Function to show rewards popup (temporary until profile page is built)
+        function showRewards(event, points) {
+            event.preventDefault();
+            alert(`✨ You have ${points} Lumina Points!\n\nRewards available:\n• 5,000 points - 20% off coupon\n• 10,000 points - Free shipping for a year\n• 25,000 points - Exclusive VIP access`);
+        }
+
+        // Function to show order history popup (temporary until order history page is built)
+        function showOrderHistory(event) {
+            event.preventDefault();
+            alert('📦 Your Order History:\n\n• Order #LUM-1234 - $299.99 - Delivered\n• Order #LUM-5678 - $149.99 - Processing\n• Order #LUM-9012 - $89.99 - Shipped');
+        }
+
+        // Add click handlers for buttons if the pages don't exist yet
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hamburger toggle functionality
+            const toggleBtn = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navLinks');
+            const nav = document.querySelector('nav');
+
+            if (toggleBtn && navMenu) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navMenu.classList.toggle('open');
+                });
+
+                // Close menu when a link or button is clicked
+                navMenu.querySelectorAll('a, button').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navMenu.classList.remove('open');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (nav && !nav.contains(event.target) && navMenu.classList.contains('open')) {
+                        navMenu.classList.remove('open');
+                    }
+                });
+            }
+
+            // This is optional - only use if you haven't created the actual pages yet
+            const orderHistoryBtn = document.querySelector('a[href="{% url 'order_history' %}"]');
+            if (orderHistoryBtn) {
+                orderHistoryBtn.addEventListener('click', function(e) {
+                    // Comment this out once you create the actual order_history page
+                    e.preventDefault();
+                    alert('Order history page is under construction. Check back soon!');
+                });
+            }
+        });
     </script>
 </body>
 

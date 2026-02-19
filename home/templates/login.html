@@ -82,6 +82,36 @@
             }
         }
 
+        /* Back to home link */
+        .back-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            transition: 0.3s;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        .back-home:hover {
+            border-color: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .back-home span {
+            font-size: 18px;
+        }
+
         /* Modal Card */
         .login-modal {
             width: 420px;
@@ -317,36 +347,6 @@
             color: var(--primary);
         }
 
-        /* Back to home link */
-        .back-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: var(--text);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            backdrop-filter: blur(8px);
-            transition: 0.3s;
-            font-size: 14px;
-            z-index: 2;
-        }
-
-        .back-home:hover {
-            border-color: var(--primary);
-            transform: translateX(-5px);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
-        }
-
-        .back-home span {
-            font-size: 18px;
-        }
-
         /* Demo credentials */
         .demo-credentials {
             margin-top: 20px;
@@ -391,6 +391,7 @@
         <div class="blob"></div>
     </div>
 
+    <!-- Back to Home link - kept separate from nav for login page -->
     <a href="{% url 'home' %}" class="back-home">
         <span>←</span> Back to Home
     </a>
@@ -512,4 +513,5 @@
         });
     </script>
 </body>
+
 </html>

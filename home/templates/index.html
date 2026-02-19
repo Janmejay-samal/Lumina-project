@@ -15,6 +15,8 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --logout: #ff4757;
             --logout-hover: #ff6b81;
+            --success: #44ff44;
+            --warning: #ffaa00;
         }
 
         * {
@@ -40,7 +42,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.6; /* Increased opacity for better visibility */
+            opacity: 0.6;
         }
 
         .blob {
@@ -93,7 +95,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--glass-border);
-            background: rgba(5, 5, 5, 0.5); /* More transparent - 0.5 instead of 0.8 */
+            background: rgba(5, 5, 5, 0.5);
         }
 
         .logo {
@@ -108,10 +110,12 @@
             text-decoration: none;
         }
 
+        /* Desktop navigation links - visible on desktop */
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
@@ -144,14 +148,483 @@
             border-radius: 2px;
         }
 
-        .nav-cta {
-            display: flex;
-            align-items: center;
+        /* Desktop CTA removed - login/logout only in unified menu */
+
+        /* Main Content Styles */
+        .container {
+            padding: 150px 5% 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .nav-cta form {
-            margin: 0;
-            padding: 0;
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 2rem 0 4rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+            }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CTA Buttons */
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            opacity: 0.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Featured Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: 0.3s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.2);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--bg);
+            z-index: 1;
+        }
+
+        .product-badge.new {
+            background: linear-gradient(135deg, #44ff44, #00aa00);
+            color: #000;
+        }
+
+        .product-badge.limited {
+            background: linear-gradient(135deg, #ff44aa, #aa00aa);
+            color: white;
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: 0.3s;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.02);
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .product-card p {
+            opacity: 0.6;
+            margin-bottom: 1rem;
+        }
+
+        .product-card .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .product-card .btn {
+            display: inline-block;
+            padding: 0.6rem 1.6rem;
+            background: rgba(0, 242, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            border-radius: 999px;
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .product-card .btn:hover {
+            background: rgba(0, 242, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 4rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .feature-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .feature-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .feature-item p {
+            opacity: 0.6;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 4rem 0;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--primary);
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .cta-card {
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            border-radius: 32px;
+            padding: 4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-card h2 {
+            font-size: 2.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .cta-card p {
+            opacity: 0.6;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            padding: 4rem 5%;
+            text-align: center;
+            opacity: 0.5;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 2rem;
+        }
+
+        /* Messages/Alerts */
+        .messages-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .alert {
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2);
+            animation: slideIn 0.3s ease;
+            color: white;
+        }
+
+        .alert-success {
+            border-color: var(--success);
+        }
+
+        .alert-error {
+            border-color: var(--logout);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== MOBILE & HAMBURGER STYLES ===== */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 200;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 2rem;
+            height: 2rem;
+            margin-left: auto;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: all 0.3s linear;
+            opacity: 0.9;
+        }
+
+        /* Button Styles - exactly matching contact page */
+        .btn-login {
+            background: rgba(0, 242, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: .3px;
+            transition: all .3s ease;
+            display: inline-block;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn-login:hover {
+            background: rgba(0, 242, 255, 0.25);
+            color: var(--primary);
+            border-color: rgba(0, 242, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px) scale(1.03);
         }
 
         .btn-logout {
@@ -182,163 +655,124 @@
             transform: translateY(-2px) scale(1.03);
         }
 
-        .btn-login {
-            background: rgba(0, 242, 255, 0.15);
-            color: var(--primary);
-            border: 1px solid rgba(0, 242, 255, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 0.6rem 1.6rem;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: .3px;
-            transition: all .3s ease;
-            display: inline-block;
-        }
-
-        .btn-login:hover {
-            background: rgba(0, 242, 255, 0.25);
-            color: var(--primary);
-            border-color: rgba(0, 242, 255, 0.6);
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
-            transform: translateY(-2px) scale(1.03);
-        }
-
-        /* Main Content Styles */
-        .container {
-            padding: 150px 5% 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-family: 'Space Grotesk', sans-serif;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #fff, var(--primary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
-            }
-            to {
-                text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-            }
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.6;
-            margin-bottom: 2rem;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .product-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 2rem;
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: 0.3s;
-            text-align: center;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.2);
-        }
-
-        .product-card img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            transition: 0.3s;
-        }
-
-        .product-card:hover img {
-            transform: scale(1.02);
-        }
-
-        .product-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-
-        .product-card p {
-            opacity: 0.6;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .product-card .btn {
-            display: inline-block;
-            padding: 0.6rem 1.6rem;
-            background: rgba(0, 242, 255, 0.15);
-            color: var(--primary);
-            border: 1px solid rgba(0, 242, 255, 0.4);
-            border-radius: 999px;
-            text-decoration: none;
-            transition: 0.3s;
-            font-weight: 500;
-        }
-
-        .product-card .btn:hover {
-            background: rgba(0, 242, 255, 0.25);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-        }
-
-        footer {
-            padding: 4rem 5%;
-            text-align: center;
-            opacity: 0.5;
-            font-size: 0.9rem;
-            border-top: 1px solid var(--glass-border);
-            margin-top: 2rem;
-        }
-
+        /* Mobile styles */
         @media (max-width: 768px) {
             nav {
-                flex-direction: column;
-                gap: 1rem;
                 padding: 1rem 5%;
                 background: rgba(5, 5, 5, 0.7);
+                flex-wrap: wrap;
             }
 
             .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 2rem 0 1.5rem 0;
+                border-top: 1px solid var(--glass-border);
+                margin-top: 1rem;
+                background: rgba(5, 5, 5, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 0 0 24px 24px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                display: inline-block;
+                padding: 0.5rem 0;
+                font-size: 1.2rem;
+                color: var(--text);
+                text-decoration: none;
+                opacity: 0.8;
+            }
+
+            .nav-links a:hover {
+                opacity: 1;
+                color: var(--primary);
+            }
+
+            .mobile-cta-item {
+                margin-top: 0.5rem;
+                width: 100%;
+                display: flex;
                 justify-content: center;
+            }
+
+            .mobile-cta-item .btn-login,
+            .mobile-cta-item .btn-logout {
+                display: inline-block;
+                min-width: 160px;
+                text-align: center;
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+                background: rgba(0, 242, 255, 0.15);
+                border: 1px solid rgba(0, 242, 255, 0.4);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+            }
+
+            .mobile-cta-item .btn-logout {
+                background: rgba(255, 71, 87, 0.15);
+                color: #ff4757;
+                border: 1px solid rgba(255, 71, 87, 0.4);
+                box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
+            }
+
+            .mobile-cta-item .btn-login:hover,
+            .mobile-cta-item .btn-logout:hover {
+                transform: translateY(-2px) scale(1.03);
+            }
+
+            .mobile-cta-item .btn-login:hover {
+                background: rgba(0, 242, 255, 0.25);
+                border-color: rgba(0, 242, 255, 0.6);
+                box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            }
+
+            .mobile-cta-item .btn-logout:hover {
+                background: rgba(255, 71, 87, 0.25);
+                border-color: rgba(255, 71, 87, 0.6);
+                box-shadow: 0 0 25px rgba(255, 71, 87, 0.4);
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links a.active::after {
+                display: none;
             }
 
             .hero h1 {
                 font-size: 2.5rem;
             }
 
-            .nav-links a.active::after {
-                display: none;
+            .cta-card {
+                padding: 2rem;
+            }
+
+            .cta-card h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.6rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -346,14 +780,34 @@
 <body>
     <div class="gradient-bg">
         <div class="blob"></div>
-        <div class="blob"></div> <!-- Added second blob for more visual interest -->
+        <div class="blob"></div>
     </div>
+
+    <!-- Messages/Alerts -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Navigation -->
     <nav>
         <a href="{% url 'home' %}" class="logo">LUMINA</a>
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+
+        <!-- Three-dot hamburger icon - right corner -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Unified navigation: all links + login/logout inside -->
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_alt' %}active{% endif %}">Home</a></li>
             <li><a href="{% url 'products' %}" class="{% if request.resolver_match.url_name == 'products' %}active{% endif %}">Products</a></li>
             <li><a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
             <li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
@@ -362,35 +816,175 @@
             {% else %}
                 <li><a href="{% url 'register' %}" class="{% if request.resolver_match.url_name == 'register' %}active{% endif %}">Register</a></li>
             {% endif %}
+            <!-- Login/Logout appears here, inside the same list with contact page button styles -->
+            <li class="mobile-cta-item">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">🚪 Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
+                {% endif %}
+            </li>
         </ul>
-        <div class="nav-cta">
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-logout">🚪 Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
-            {% endif %}
-        </div>
     </nav>
 
     <main class="container">
-        <div class="hero">
+        <!-- Hero Section -->
+        <section class="hero">
             <h1>Welcome to Lumina</h1>
-            <p>Experience the future of technology</p>
-        </div>
-
-        <div class="products-grid">
-            {% for product in products %}
-            <div class="product-card">
-                <img src="{{ product.image }}" alt="{{ product.name }}">
-                <h3>{{ product.name }}</h3>
-                <p>${{ product.price }}</p>
-                <a href="{% url 'products' %}" class="btn">View Details</a>
+            <p>Experience the future of technology with our cutting-edge devices that blend innovation, design, and performance.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'products' %}" class="btn-primary">Explore Products</a>
+                <a href="{% url 'about' %}" class="btn-secondary">Learn More</a>
             </div>
-            {% endfor %}
-        </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section class="featured-products">
+            <div class="section-header">
+                <h2>Featured Products</h2>
+                <p>Discover our most popular and innovative creations</p>
+            </div>
+
+            <div class="products-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    {% if product.is_new %}
+                        <div class="product-badge new">NEW</div>
+                    {% elif product.is_limited %}
+                        <div class="product-badge limited">LIMITED</div>
+                    {% endif %}
+                    
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23222244'/%3E%3Ctext x='50' y='120' fill='%2300f2ff' font-size='24' font-family='monospace'%3E{{ product.name|slice:':8'|upper }}%3C/text%3E%3C/svg%3E" alt="{{ product.name }}">
+                    {% endif %}
+                    
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description|truncatechars:60 }}</p>
+                    <div class="price">${{ product.price }}</div>
+                    <a href="{% url 'product_detail' product.id %}" class="btn">View Details</a>
+                </div>
+                {% empty %}
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <p>No featured products available at the moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="{% url 'products' %}" class="btn-primary">View All Products</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Why Choose Lumina</h2>
+                <p>Experience the difference with our premium features</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Cutting-Edge Technology</h3>
+                    <p>Stay ahead with the latest innovations and future-ready devices.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✨</div>
+                    <h3>Premium Design</h3>
+                    <p>Elegant aesthetics combined with exceptional build quality.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💎</div>
+                    <h3>Unmatched Performance</h3>
+                    <p>Experience lightning-fast speeds and seamless multitasking.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Your data and privacy are protected with enterprise-grade security.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Design Awards</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section">
+            <div class="section-header">
+                <h2>What Our Customers Say</h2>
+                <p>Real experiences from real people</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"The Lumina Pro completely transformed my workflow. The performance is absolutely incredible and the design is stunning."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AR</div>
+                        <div class="author-info">
+                            <h4>Alex Rivera</h4>
+                            <p>Tech Entrepreneur</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Best investment I've made this year. The customer support is exceptional and the product quality is unmatched."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SM</div>
+                        <div class="author-info">
+                            <h4>Sarah Mitchell</h4>
+                            <p>Creative Director</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Finally, a company that delivers on its promises. The attention to detail in every product is remarkable."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">DK</div>
+                        <div class="author-info">
+                            <h4>David Kumar</h4>
+                            <p>Software Engineer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-card">
+                <h2>Ready to Experience the Future?</h2>
+                <p>Join thousands of satisfied customers and discover the Lumina difference today.</p>
+                <div class="cta-buttons">
+                    <a href="{% url 'products' %}" class="btn-primary">Shop Now</a>
+                    <a href="{% url 'contact' %}" class="btn-secondary">Contact Us</a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -398,8 +992,8 @@
     </footer>
 
     <script>
-        // Add active class to current page
         document.addEventListener('DOMContentLoaded', function() {
+            // Original active class logic
             const currentLocation = window.location.pathname;
             const navLinks = document.querySelectorAll('.nav-links a');
             
@@ -407,6 +1001,51 @@
                 if (link.getAttribute('href') === currentLocation) {
                     link.classList.add('active');
                 }
+            });
+
+            // Hamburger toggle functionality
+            const toggleBtn = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navLinks');
+            const nav = document.querySelector('nav');
+
+            if (toggleBtn && navMenu) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navMenu.classList.toggle('open');
+                });
+
+                // Close menu when a link or button is clicked
+                navMenu.querySelectorAll('a, button').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navMenu.classList.remove('open');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (nav && !nav.contains(event.target) && navMenu.classList.contains('open')) {
+                        navMenu.classList.remove('open');
+                    }
+                });
+            }
+
+            // Auto-hide messages after 5 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 5000);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
     </script>

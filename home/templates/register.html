@@ -135,6 +135,23 @@
             outline: none;
             transition: .25s;
             color: var(--text);
+            /* Prevent browser autofill background */
+            transition: background-color 0s;
+        }
+
+        /* Override browser autofill styles */
+        .field input:-webkit-autofill,
+        .field input:-webkit-autofill:hover,
+        .field input:-webkit-autofill:focus,
+        .field input:-webkit-autofill:active,
+        .name-field input:-webkit-autofill,
+        .name-field input:-webkit-autofill:hover,
+        .name-field input:-webkit-autofill:focus,
+        .name-field input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #1a1a2e inset !important;
+            -webkit-text-fill-color: var(--text) !important;
+            caret-color: var(--text);
+            transition: background-color 5000s ease-in-out 0s;
         }
 
         .field input:focus {
@@ -446,6 +463,15 @@
         .back-home span {
             font-size: 18px;
         }
+
+        /* Prevent form data persistence */
+        form {
+            autocomplete: off;
+        }
+
+        input {
+            autocomplete: off;
+        }
     </style>
 </head>
 <body>
@@ -470,47 +496,48 @@
         </ul>
         {% endif %}
 
-        <form method="post">
+        <form method="post" autocomplete="off">
             {% csrf_token %}
 
             <!-- Name fields in a row -->
             <div class="name-row">
                 <div class="name-field">
                     <input type="text" name="first_name" id="first_name" placeholder=" " 
-                           value="{{ first_name|default:'' }}" required>
+                           value="" autocomplete="off" required>
                     <label for="first_name">First Name</label>
                 </div>
 
                 <div class="name-field">
                     <input type="text" name="last_name" id="last_name" placeholder=" " 
-                           value="{{ last_name|default:'' }}" required>
+                           value="" autocomplete="off" required>
                     <label for="last_name">Last Name</label>
                 </div>
             </div>
 
             <div class="field">
                 <input type="text" name="username" id="username" placeholder=" " 
-                       value="{{ username|default:'' }}" required>
+                       value="" autocomplete="off" required>
                 <label for="username">Username</label>
                 <span class="input-icon">👤</span>
             </div>
 
             <div class="field">
                 <input type="email" name="email" id="email" placeholder=" " 
-                       value="{{ email|default:'' }}" required>
+                       value="" autocomplete="off" required>
                 <label for="email">Email</label>
                 <span class="input-icon">📧</span>
             </div>
 
             <div class="field">
                 <input type="tel" name="phone" id="phone" placeholder=" " 
-                       value="{{ phone|default:'' }}" required>
+                       value="" autocomplete="off" required>
                 <label for="phone">Phone</label>
                 <span class="input-icon">📱</span>
             </div>
 
             <div class="field">
-                <input type="password" name="password" id="password" placeholder=" " required>
+                <input type="password" name="password" id="password" placeholder=" " 
+                       autocomplete="new-password" required>
                 <label for="password">Password</label>
                 <span class="input-icon">🔒</span>
                 <div class="password-strength">
@@ -592,6 +619,27 @@
                 }
             `;
             document.head.appendChild(style);
+
+            // Clear any potential autofilled values
+            setTimeout(() => {
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    if (input.type !== 'password' && input.value !== '') {
+                        // Only clear if it looks like autofill (has value but user hasn't interacted)
+                        if (!input.hasAttribute('data-user-interacted')) {
+                            input.value = '';
+                        }
+                    }
+                });
+            }, 100);
+
+            // Mark when user interacts with inputs
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.setAttribute('data-user-interacted', 'true');
+                });
+            });
         });
     </script>
 </body>

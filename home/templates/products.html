@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumina | Products</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #00f2ff;
@@ -15,6 +16,9 @@
             --glass-border: rgba(255,255,255,0.1);
             --logout: #ff4757;
             --logout-hover: #ff6b81;
+            --success: #44ff44;
+            --warning: #ffaa00;
+            --danger: #ff4757;
         }
         * { 
             margin:0; 
@@ -95,10 +99,14 @@
             text-decoration: none;
         }
         
+        /* Desktop navigation links - now on the right side like reference */
         .nav-links { 
             display:flex; 
             gap:2rem; 
             list-style:none; 
+            align-items: center;
+            margin-left: auto;
+            margin-right: 1rem;
         }
         
         .nav-links a {
@@ -131,17 +139,192 @@
             border-radius: 2px;
         }
         
-        .nav-cta {
+        /* Cart Icon in Nav - positioned after nav links */
+        .cart-icon {
+            position: relative;
+            margin: 0 0.5rem;
+        }
+
+        .cart-icon a {
             display: flex;
             align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 50%;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .nav-cta form {
-            margin: 0;
-            padding: 0;
+        .cart-icon a:hover {
+            background: rgba(0, 242, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
         }
 
-        /* Logout Button Styles - Red Theme */
+        .cart-count-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border: 2px solid var(--bg);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
+
+        /* Login Required Overlay */
+        .login-required-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .login-required-overlay.active {
+            display: flex;
+        }
+
+        .login-prompt-modal {
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            border-radius: 28px;
+            padding: 3rem;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            animation: slideUp 0.4s ease;
+        }
+
+        .login-prompt-modal i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .login-prompt-modal h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .login-prompt-modal p {
+            opacity: 0.7;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .login-prompt-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .login-prompt-btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .login-prompt-btn.primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .login-prompt-btn.secondary {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+        }
+
+        .login-prompt-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 242, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Button Styles - exactly matching reference */
+        .btn-login {
+            background: rgba(0, 242, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+            padding: 0.6rem 1.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: .3px;
+            transition: all .3s ease;
+            display: inline-block;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn-login:hover {
+            background: rgba(0, 242, 255, 0.25);
+            color: var(--primary);
+            border-color: rgba(0, 242, 255, 0.6);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px) scale(1.03);
+        }
+
         .btn-logout {
             background: rgba(255, 71, 87, 0.15);
             color: #ff4757;
@@ -170,32 +353,49 @@
             transform: translateY(-2px) scale(1.03);
         }
 
-        /* Login Button Styles - Blue Theme */
-        .btn-login {
-            background: rgba(0, 242, 255, 0.15);
-            color: var(--primary);
-            border: 1px solid rgba(0, 242, 255, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            padding: 0.6rem 1.6rem;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: .3px;
-            transition: all .3s ease;
-            display: inline-block;
+        /* Messages/Alerts */
+        .messages-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 350px;
         }
 
-        .btn-login:hover {
-            background: rgba(0, 242, 255, 0.25);
-            color: var(--primary);
-            border-color: rgba(0, 242, 255, 0.6);
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
-            transform: translateY(-2px) scale(1.03);
+        .alert {
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2);
+            animation: slideIn 0.3s ease;
+            color: white;
+        }
+
+        .alert-success {
+            border-color: var(--success);
+        }
+
+        .alert-error {
+            border-color: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
         
         .hero {
-            min-height:40vh; 
+            min-height:30vh; 
             display:flex; 
             flex-direction:column; 
             justify-content:center;
@@ -230,10 +430,74 @@
             margin:1rem auto 0; 
         }
 
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 5%;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.8rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .filter-btn:hover::before {
+            left: 100%;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, rgba(0,242,255,0.2), rgba(112,0,255,0.2));
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .active-filter-badge {
+            text-align: center;
+            margin: 1rem 5%;
+            font-size: 0.95rem;
+            opacity: 0.7;
+            min-height: 24px;
+        }
+
+        .active-filter-badge span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
         .features {
-            padding:2rem 5% 6rem; 
+            padding:2rem 5% 4rem; 
             display:grid; 
-            grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
             gap:2.5rem;
         }
         
@@ -247,6 +511,8 @@
             transition:0.4s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .feature-card::before {
@@ -271,23 +537,51 @@
         .feature-card:hover::before {
             opacity: 1;
         }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--bg);
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .product-badge.new {
+            background: linear-gradient(135deg, #44ff44, #00aa00);
+            color: #000;
+        }
+
+        .product-badge.limited {
+            background: linear-gradient(135deg, #ff44aa, #aa00aa);
+        }
         
         .feature-card h3 { 
             color:var(--primary); 
             margin:1rem 0 0.5rem; 
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            font-weight: 600;
         }
 
         .feature-card p { 
             opacity: 0.8; 
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         .feature-card img {
             width:100%; 
-            border-radius:12px;
+            border-radius:16px;
             transition: transform 0.3s ease;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a2e, #2a1a3a);
         }
 
         .feature-card:hover img {
@@ -295,24 +589,62 @@
         }
 
         .price-tag {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
             margin: 0.5rem 0;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .specs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .spec {
+            padding: 0.3rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .spec:hover {
+            border-color: var(--primary);
+            background: rgba(0, 242, 255, 0.1);
+        }
+
+        .product-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.3rem 1rem;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
         }
         
         .btn {
-            padding:0.8rem 2rem; 
-            border-radius:50px; 
+            padding:0.8rem 1rem; 
+            border-radius:12px; 
             font-weight:600; 
             text-decoration:none;
             background:linear-gradient(90deg, var(--primary), var(--secondary)); 
             color:white;
             display:inline-block; 
-            margin-top:1rem; 
+            margin-top:0.5rem; 
             transition:0.3s;
             border: none;
             cursor: pointer;
+            text-align: center;
+            font-size: 0.95rem;
         }
         
         .btn:hover { 
@@ -324,7 +656,6 @@
             background: transparent;
             border: 1px solid var(--primary);
             color: var(--primary);
-            margin-left: 0.5rem;
         }
 
         .btn-outline:hover {
@@ -332,40 +663,482 @@
             box-shadow: 0 10px 25px rgba(0, 242, 255, 0.2);
         }
 
-        .product-actions {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        footer { 
-            padding:4rem 5%; 
-            border-top:1px solid var(--glass-border); 
-            text-align:center; 
-            opacity:0.5;
-            margin-top: 2rem;
+        .btn-wishlist {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            font-size: 1.1rem;
         }
 
+        .btn-wishlist:hover {
+            background: rgba(255,71,87,0.1);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .btn-wishlist.active {
+            background: rgba(255,71,87,0.2);
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .product-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 0.5fr;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .no-products {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 4rem;
+            background: var(--glass);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .no-products i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-products h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-products p {
+            opacity: 0.6;
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 5%;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            min-width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        .page-btn:hover {
+            background: linear-gradient(135deg, rgba(0,242,255,0.2), rgba(112,0,255,0.2));
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .page-btn.active {
+            background: linear-gradient(135deg, rgba(0,242,255,0.2), rgba(112,0,255,0.2));
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .page-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .page-info {
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--glass);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .items-per-page {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass);
+            padding: 0 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .items-per-page select {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            padding: 0.5rem;
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .items-per-page select option {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 5% 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .footer-section p {
+            opacity: 0.7;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: 0.3s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: var(--bg);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .newsletter-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+
+        .newsletter-btn {
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-bottom-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--primary);
+        }
+
+        .member-badge {
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            background: linear-gradient(135deg, rgba(0,242,255,0.1), rgba(112,0,255,0.1));
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        /* ===== MOBILE & HAMBURGER STYLES ===== */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 200;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 2rem;
+            height: 2rem;
+            margin-left: 0.5rem;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: all 0.3s linear;
+            opacity: 0.9;
+        }
+
+        /* Mobile styles */
         @media (max-width: 768px) {
             nav {
-                flex-direction: column;
-                gap: 1rem;
                 padding: 1rem 5%;
-            }
-            .nav-links {
-                gap: 1rem;
+                background: rgba(5, 5, 5, 0.7);
                 flex-wrap: wrap;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+                padding: 2rem 0 1.5rem 0;
+                border-top: 1px solid var(--glass-border);
+                margin-top: 1rem;
+                background: rgba(5, 5, 5, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 0 0 24px 24px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links a {
+                display: inline-block;
+                padding: 0.5rem 0;
+                font-size: 1.2rem;
+                color: var(--text);
+                text-decoration: none;
+                opacity: 0.8;
+            }
+
+            .nav-links a:hover {
+                opacity: 1;
+                color: var(--primary);
+            }
+
+            .mobile-cta-item {
+                margin-top: 0.5rem;
+                width: 100%;
+                display: flex;
                 justify-content: center;
             }
+
+            .mobile-cta-item .btn-login,
+            .mobile-cta-item .btn-logout {
+                display: inline-block;
+                min-width: 160px;
+                text-align: center;
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+                background: rgba(0, 242, 255, 0.15);
+                border: 1px solid rgba(0, 242, 255, 0.4);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+            }
+
+            .mobile-cta-item .btn-logout {
+                background: rgba(255, 71, 87, 0.15);
+                color: #ff4757;
+                border: 1px solid rgba(255, 71, 87, 0.4);
+                box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
+            }
+
+            .mobile-cta-item .btn-login:hover,
+            .mobile-cta-item .btn-logout:hover {
+                transform: translateY(-2px) scale(1.03);
+            }
+
+            .mobile-cta-item .btn-login:hover {
+                background: rgba(0, 242, 255, 0.25);
+                border-color: rgba(0, 242, 255, 0.6);
+                box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            }
+
+            .mobile-cta-item .btn-logout:hover {
+                background: rgba(255, 71, 87, 0.25);
+                border-color: rgba(255, 71, 87, 0.6);
+                box-shadow: 0 0 25px rgba(255, 71, 87, 0.4);
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
             .nav-links a.active::after {
                 display: none;
             }
+
             .product-actions {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
+            
             .btn {
                 width: 100%;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-bottom-links {
+                justify-content: center;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -375,10 +1148,37 @@
         <div class="blob"></div>
         <div class="blob"></div>
     </div>
+
+    <!-- Messages/Alerts -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Login Required Overlay -->
+    <div class="login-required-overlay" id="loginOverlay">
+        <div class="login-prompt-modal">
+            <i class="fas fa-lock"></i>
+            <h2>Login Required</h2>
+            <p>You need to be logged in to add items to your cart. Please login or create an account to continue shopping.</p>
+            <div class="login-prompt-buttons">
+                <a href="{% url 'login' %}" class="login-prompt-btn primary">Login</a>
+                <a href="{% url 'register' %}" class="login-prompt-btn secondary">Register</a>
+                <button class="login-prompt-btn secondary" onclick="closeLoginOverlay()">Close</button>
+            </div>
+        </div>
+    </div>
     
 <nav>
     <a href="{% url 'home' %}" class="logo">LUMINA</a>
-    <ul class="nav-links">
+    
+    <!-- Unified navigation: all links + login/logout inside - now on the right side -->
+    <ul class="nav-links" id="navLinks">
         <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
         <li><a href="{% url 'products' %}" {% if request.resolver_match.url_name == 'products' %}class="active"{% endif %}>Products</a></li>
         <li><a href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>About</a></li>
@@ -388,17 +1188,33 @@
         {% else %}
             <li><a href="{% url 'register' %}" {% if request.resolver_match.url_name == 'register' %}class="active"{% endif %}>Register</a></li>
         {% endif %}
+        <!-- Login/Logout appears here, inside the same list with button styles -->
+        <li class="mobile-cta-item">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">🚪 Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
+            {% endif %}
+        </li>
     </ul>
-    <div class="nav-cta">
-        {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to logout?')">
-                {% csrf_token %}
-                <button type="submit" class="btn-logout">🚪 Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}" class="btn-login">🔑 Login</a>
-        {% endif %}
+
+    <!-- Cart Icon - positioned after nav links -->
+    <div class="cart-icon">
+        <a href="{% url 'add_to_cart' %}" title="View Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count-badge" id="cartCount">0</span>
+        </a>
     </div>
+
+    <!-- Three-dot hamburger icon - right corner -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 </nav>
 
     <main>
@@ -406,80 +1222,439 @@
             <h1>Our Collection</h1>
             <p>Discover the next generation of premium devices.</p>
         </section>
+
+        <!-- Filter Bar with all categories - fully functional -->
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="laptops">💻 Laptops</button>
+            <button class="filter-btn" data-filter="audio">🎧 Audio</button>
+            <button class="filter-btn" data-filter="wearables">⌚ Wearables</button>
+            <button class="filter-btn" data-filter="accessories">🔌 Accessories</button>
+            <button class="filter-btn" data-filter="limited">⭐ Limited</button>
+        </div>
+
+        <!-- Active filter display -->
+        <div class="active-filter-badge" id="activeFilter">
+            Showing: <span>All Products</span>
+        </div>
         
-        <section class="features">
-            <div class="feature-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23222244'/%3E%3Ctext x='50' y='120' fill='%2300f2ff' font-size='24' font-family='monospace'%3EAETHER%3C/text%3E%3C/svg%3E" style="width:100%; border-radius:12px;">
-                <h3>Adaptive Aether</h3>
-                <p class="price-tag">$1,299</p>
-                <p>Neural interface ready.</p>
+        <section class="features" id="productsGrid">
+            <!-- DYNAMIC PRODUCTS FROM DATABASE -->
+            {% for product in products %}
+            <div class="feature-card" 
+                 data-category="{% if product.is_limited %}limited {% endif %}{{ product.category }}" 
+                 data-product-id="{{ product.id }}" 
+                 data-product-name="{{ product.name }}" 
+                 data-product-price="{{ product.price }}">
+                
+                {% if product.is_new or product.is_limited %}
+                <div class="product-badge {% if product.is_new %}new{% elif product.is_limited %}limited{% endif %}">
+                    {% if product.is_new %}NEW{% elif product.is_limited %}LIMITED{% endif %}
+                </div>
+                {% endif %}
+                
+                <div class="product-category">{{ product.get_category_display|upper }}</div>
+                
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23222244'/%3E%3Ctext x='50' y='120' fill='%2300f2ff' font-size='24' font-family='monospace'%3E{{ product.name|slice:':8'|upper }}%3C/text%3E%3C/svg%3E" alt="{{ product.name }}">
+                {% endif %}
+                
+                <h3>{{ product.name }}</h3>
+                
+                <div class="specs">
+                    {% if product.spec_1 %}<span class="spec">{{ product.spec_1 }}</span>{% endif %}
+                    {% if product.spec_2 %}<span class="spec">{{ product.spec_2 }}</span>{% endif %}
+                    {% if product.spec_3 %}<span class="spec">{{ product.spec_3 }}</span>{% endif %}
+                </div>
+                
+                <p class="price-tag">${{ product.price }}</p>
+                <p>{{ product.description|truncatechars:60 }}</p>
+                
                 <div class="product-actions">
-                    <a href="#" class="btn">Add to Cart</a>
-                    <a href="#" class="btn btn-outline">View Details</a>
+                    <a href="#" class="btn add-to-cart" onclick="addToCart(event, this)">Add to Cart</a>
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline">Details</a>
+                    <a href="#" class="btn btn-wishlist wishlist-btn" onclick="toggleWishlist(event, this)"><i class="fas fa-heart"></i></a>
                 </div>
             </div>
-            <div class="feature-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23332255'/%3E%3Ctext x='30' y='120' fill='%237000ff' font-size='24' font-family='monospace'%3ENOVA%3C/text%3E%3C/svg%3E" style="width:100%; border-radius:12px;">
-                <h3>Nova Sphere</h3>
-                <p class="price-tag">$849</p>
-                <p>360° holographic audio.</p>
-                <div class="product-actions">
-                    <a href="#" class="btn">Add to Cart</a>
-                    <a href="#" class="btn btn-outline">View Details</a>
-                </div>
+            {% empty %}
+            <div class="no-products">
+                <i class="fas fa-box-open"></i>
+                <h3>No Products Found</h3>
+                <p>Products will appear here once added to the database.</p>
             </div>
-            <div class="feature-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23441166'/%3E%3Ctext x='40' y='120' fill='%23ffffff' font-size='24' font-family='monospace'%3ECELESTIA%3C/text%3E%3C/svg%3E" style="width:100%; border-radius:12px;">
-                <h3>Celestia Edge</h3>
-                <p class="price-tag">$1,799</p>
-                <p>Graphene quantum dot display.</p>
-                <div class="product-actions">
-                    <a href="#" class="btn">Add to Cart</a>
-                    <a href="#" class="btn btn-outline">View Details</a>
-                </div>
-            </div>
-            <div class="feature-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%231a3344'/%3E%3Ctext x='35' y='120' fill='%2300f2ff' font-size='24' font-family='monospace'%3ELUMINA X%3C/text%3E%3C/svg%3E" style="width:100%; border-radius:12px;">
-                <h3>Lumina X</h3>
-                <p class="price-tag">$2,499</p>
-                <p>Limited founder's edition.</p>
-                <div class="product-actions">
-                    <a href="#" class="btn">Add to Cart</a>
-                    <a href="#" class="btn btn-outline">View Details</a>
-                </div>
-            </div>
+            {% endfor %}
         </section>
+
+        <!-- Pagination Section with Working Buttons -->
+        <div class="pagination-container">
+            <div class="pagination" id="pagination">
+                <!-- Pagination buttons will be generated by JavaScript -->
+            </div>
+            
+            <div class="page-info" id="pageInfo">
+                Page 1 of 
+                <script>
+                    document.write(Math.ceil({{ products|length }} / 12) || 1);
+                </script>
+            </div>
+            
+            <div class="items-per-page">
+                <span>Show:</span>
+                <select id="itemsPerPage" onchange="changeItemsPerPage(this.value)">
+                    <option value="6">6</option>
+                    <option value="12" selected>12</option>
+                    <option value="24">24</option>
+                    <option value="48">48</option>
+                </select>
+            </div>
+        </div>
     </main>
     
+    <!-- Updated Footer -->
     <footer>
-        <p>&copy; 2026 LUMINA Technologies. All rights reserved. | {% if user.is_authenticated %}NEXUS ELITE MEMBER{% else %}GUEST{% endif %}</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LUMINA</h3>
+                <p>Pioneering the future of technology with cutting-edge devices that blend innovation, design, and performance.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="{% url 'products' %}"><i class="fas fa-chevron-right"></i> Products</a></li>
+                    <li><a href="{% url 'about' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{% url 'contact' %}"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Careers</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'products' %}?category=laptops" class="category-link"><i class="fas fa-chevron-right"></i> Laptops</a></li>
+                    <li><a href="{% url 'products' %}?category=audio" class="category-link"><i class="fas fa-chevron-right"></i> Audio</a></li>
+                    <li><a href="{% url 'products' %}?category=wearables" class="category-link"><i class="fas fa-chevron-right"></i> Wearables</a></li>
+                    <li><a href="{% url 'products' %}?category=accessories" class="category-link"><i class="fas fa-chevron-right"></i> Accessories</a></li>
+                    <li><a href="{% url 'products' %}?category=limited" class="category-link"><i class="fas fa-chevron-right"></i> Limited Edition</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on new products and exclusive offers.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); subscribeNewsletter(this);">
+                    <input type="email" placeholder="Your email" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
+                <div style="margin-top: 1.5rem;">
+                    <span class="member-badge">
+                        <i class="fas fa-crown" style="margin-right: 0.3rem;"></i>
+                        {% if user.is_authenticated %}NEXUS ELITE{% else %}GUEST{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>&copy; 2026 LUMINA Technologies. All rights reserved. | Designed by Janmejay Samal</div>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // Smooth card animations
-        document.querySelectorAll('.feature-card').forEach((card, index) => {
-            card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
-        });
+        // Check if user is authenticated (from Django)
+        const isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+        
+        // Cart functionality
+        let cartItems = JSON.parse(localStorage.getItem('luminaCart')) || [];
 
-        // Add animation styles
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
+        // Pagination variables
+        let currentPage = 1;
+        let itemsPerPage = 12;
+        let totalProducts = document.querySelectorAll('.feature-card').length;
+        let totalPages = Math.ceil(totalProducts / itemsPerPage);
+
+        // Update cart count on load
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.textContent = cartItems.length;
+            }
+        }
+
+        // Show login overlay
+        function showLoginOverlay() {
+            document.getElementById('loginOverlay').classList.add('active');
+        }
+
+        // Close login overlay
+        function closeLoginOverlay() {
+            document.getElementById('loginOverlay').classList.remove('active');
+        }
+
+        // Add to cart function - REQUIRES LOGIN
+        function addToCart(event, element) {
+            event.preventDefault();
+            
+            if (!isAuthenticated) {
+                showLoginOverlay();
+                return false;
+            }
+            
+            const card = element.closest('.feature-card');
+            const productId = card.dataset.productId;
+            const productName = card.dataset.productName;
+            const productPrice = parseInt(card.dataset.productPrice);
+            
+            const product = {
+                id: productId,
+                name: productName,
+                price: productPrice,
+                quantity: 1
+            };
+            
+            cartItems.push(product);
+            localStorage.setItem('luminaCart', JSON.stringify(cartItems));
+            updateCartCount();
+            
+            const originalText = element.textContent;
+            element.textContent = '✓ Added!';
+            element.style.background = 'linear-gradient(90deg, #44ff44, #00aa00)';
+            
+            setTimeout(() => {
+                element.textContent = originalText;
+                element.style.background = 'linear-gradient(90deg, var(--primary), var(--secondary))';
+            }, 2000);
+        }
+
+        // View details function - updated to use Django URL
+        function viewDetails(event, element) {
+            // This function is now replaced by the direct link to product_detail
+            // Keeping for backward compatibility
+            return true;
+        }
+
+        // Toggle wishlist function
+        function toggleWishlist(event, element) {
+            event.preventDefault();
+            
+            if (!isAuthenticated) {
+                showLoginOverlay();
+                return false;
+            }
+            
+            element.classList.toggle('active');
+        }
+
+        // Pagination Functions
+        function renderPagination() {
+            const paginationEl = document.getElementById('pagination');
+            const pageInfoEl = document.getElementById('pageInfo');
+            
+            if (!paginationEl) return;
+            
+            let paginationHTML = '';
+            
+            paginationHTML += `<button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+            
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (startPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="changePage(1)">1</button>`;
+                if (startPage > 2) {
+                    paginationHTML += `<span class="page-btn disabled">...</span>`;
                 }
             }
             
-            .feature-card {
-                opacity: 0;
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
             }
-        `;
-        document.head.appendChild(style);
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHTML += `<span class="page-btn disabled">...</span>`;
+                }
+                paginationHTML += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            paginationHTML += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+            
+            paginationEl.innerHTML = paginationHTML;
+            pageInfoEl.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            showPageProducts();
+        }
+
+        function changePage(page) {
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderPagination();
+            document.querySelector('.features').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function changeItemsPerPage(value) {
+            itemsPerPage = parseInt(value);
+            totalPages = Math.ceil(totalProducts / itemsPerPage);
+            currentPage = 1;
+            renderPagination();
+        }
+
+        function showPageProducts() {
+            const productCards = document.querySelectorAll('.feature-card');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            
+            productCards.forEach((card, index) => {
+                if (card.dataset.visible === 'false') {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = (index >= start && index < end) ? 'flex' : 'none';
+                }
+            });
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter(form) {
+            const input = form.querySelector('input');
+            if (input.value) {
+                alert(`Thanks for subscribing!`);
+                input.value = '';
+            }
+        }
+
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const productCards = document.querySelectorAll('.feature-card');
+            const activeFilterSpan = document.querySelector('#activeFilter span');
+
+            // Initialize all products as visible
+            productCards.forEach(card => {
+                card.dataset.visible = 'true';
+            });
+
+            function filterProducts(category) {
+                let visibleCount = 0;
+                
+                productCards.forEach(card => {
+                    const categories = card.dataset.category.split(' ');
+                    if (category === 'all' || categories.includes(category)) {
+                        card.dataset.visible = 'true';
+                        visibleCount++;
+                    } else {
+                        card.dataset.visible = 'false';
+                    }
+                });
+                
+                totalProducts = visibleCount;
+                totalPages = Math.ceil(totalProducts / itemsPerPage) || 1;
+                currentPage = 1;
+                
+                renderPagination();
+                
+                // Update active filter text
+                let displayText = 'All Products';
+                if (category === 'laptops') displayText = 'Laptops';
+                else if (category === 'audio') displayText = 'Audio';
+                else if (category === 'wearables') displayText = 'Wearables';
+                else if (category === 'accessories') displayText = 'Accessories';
+                else if (category === 'limited') displayText = 'Limited Edition';
+                activeFilterSpan.textContent = displayText;
+                
+                // Show/hide no products message
+                const existingMsg = document.querySelector('.no-products');
+                if (visibleCount === 0) {
+                    if (!existingMsg) {
+                        const msg = document.createElement('div');
+                        msg.className = 'no-products';
+                        msg.innerHTML = '<i class="fas fa-search"></i><h3>No Products Found</h3><p>No products available in this category.</p>';
+                        document.querySelector('.features').appendChild(msg);
+                    }
+                } else if (existingMsg) {
+                    existingMsg.remove();
+                }
+            }
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterProducts(this.dataset.filter);
+                });
+            });
+
+            document.querySelectorAll('.category-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+                    const category = new URLSearchParams(url.split('?')[1]).get('category');
+                    filterButtons.forEach(btn => {
+                        if (btn.dataset.filter === category) btn.click();
+                    });
+                    document.querySelector('.features').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Hamburger toggle functionality
+            const toggleBtn = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navLinks');
+            const nav = document.querySelector('nav');
+
+            if (toggleBtn && navMenu) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navMenu.classList.toggle('open');
+                });
+
+                // Close menu when a link or button is clicked
+                navMenu.querySelectorAll('a, button').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navMenu.classList.remove('open');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (nav && !nav.contains(event.target) && navMenu.classList.contains('open')) {
+                        navMenu.classList.remove('open');
+                    }
+                });
+            }
+
+            updateCartCount();
+            renderPagination();
+
+            document.getElementById('loginOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeLoginOverlay();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeLoginOverlay();
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 5000);
+        });
     </script>
 </body>
 </html>

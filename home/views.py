@@ -1,32 +1,110 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Product
+import json
+
 
 # Create your views here.
 def home(request):
-    # Sample product data for demo
-    sample_products = [
-        {'id': 1, 'name': 'Lumina Pro', 'price': 1299, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-        {'id': 2, 'name': 'Lumina Air', 'price': 999, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-        {'id': 3, 'name': 'Lumina Core', 'price': 799, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-    ]
-    return render(request, 'index.html', {'products': sample_products, 'is_home': True})
+    # Get featured products from database (latest 3 products)
+    featured_products = Product.objects.all().order_by('-created_at')[:3]
+    return render(request, 'index.html', {'products': featured_products, 'is_home': True})
 
 def products(request):
-    # Sample product data for demo
-    sample_products = [
-        {'id': 1, 'name': 'Lumina Pro', 'price': 1299, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-        {'id': 2, 'name': 'Lumina Air', 'price': 999, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-        {'id': 3, 'name': 'Lumina Core', 'price': 799, 'image': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80'},
-    ]
-    return render(request, 'products.html', {'products': sample_products})
+    """Main products page with filtering"""
+    # Get all products from database
+    products = Product.objects.all()
+    
+    # Get filter parameters
+    category = request.GET.get('category', 'all')
+    search_query = request.GET.get('search', '')
+    
+    # Apply category filter
+    if category != 'all':
+        if category == 'limited':
+            products = products.filter(is_limited=True)
+        else:
+            products = products.filter(category=category)
+    
+    # Apply search filter
+    if search_query:
+        products = products.filter(
+            models.Q(name__icontains=search_query) |
+            models.Q(description__icontains=search_query)
+        )
+    
+    context = {
+        'products': products,
+        'current_category': category,
+        'search_query': search_query,
+    }
+    return render(request, 'products.html', context)
+
+def product_detail(request, product_id=None, slug=None):
+    """Display individual product details"""
+    try:
+        if product_id:
+            product = get_object_or_404(Product, id=product_id)
+        elif slug:
+            product = get_object_or_404(Product, slug=slug)
+        else:
+            messages.error(request, 'Product not found.')
+            return redirect('products')
+        
+        # Get related products (same category, excluding current product)
+        related_products = Product.objects.filter(
+            category=product.category
+        ).exclude(id=product.id)[:4]
+        
+        context = {
+            'product': product,
+            'related_products': related_products,
+        }
+        return render(request, 'product_detail.html', context)
+    except Exception as e:
+        messages.error(request, f'Error loading product: {str(e)}')
+        return redirect('products')
+
+def products_by_category(request, category):
+    """Filter products by category URL parameter"""
+    # Validate category
+    valid_categories = dict(Product.CATEGORY_CHOICES)
+    
+    if category == 'limited':
+        products = Product.objects.filter(is_limited=True)
+        category_name = 'Limited Edition'
+    elif category in valid_categories:
+        products = Product.objects.filter(category=category)
+        category_name = valid_categories.get(category, category.title())
+    else:
+        messages.error(request, f'Category "{category}" not found.')
+        return redirect('products')
+    
+    context = {
+        'products': products,
+        'current_category': category,
+        'category_name': category_name,
+    }
+    return render(request, 'products.html', context)
 
 def about(request):
     return render(request, 'about.html')
 
 def contact(request):
+    if request.method == 'POST':
+        # Handle contact form submission
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        message = request.POST.get('message', '')
+        
+        # Here you would typically send an email or save to database
+        messages.success(request, f"Thank you {name}! Your message has been sent. We'll respond within 24 hours.")
+        return redirect('contact')
+    
     return render(request, 'contact.html', {'section': 'contact'})
 
 @login_required(login_url='login')
@@ -42,7 +120,8 @@ def dashboard(request):
     else:
         user_initials = request.user.username[0].upper()
     
-    # Sample dashboard data
+    # Get real data from database (you'll need to create these models)
+    # For now, keep sample data
     context = {
         'display_name': display_name,
         'user_initials': user_initials,
@@ -77,6 +156,70 @@ def dashboard(request):
         ]
     }
     return render(request, "dashboard.html", context)
+
+@login_required(login_url='login')
+def profile(request):
+    """User profile page - View and edit profile information"""
+    if request.method == 'POST':
+        # Update user information
+        user = request.user
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        
+        # Check if username is being changed and if it's available
+        new_username = request.POST.get('username', '').strip()
+        if new_username and new_username != user.username:
+            if User.objects.filter(username=new_username).exclude(id=user.id).exists():
+                messages.error(request, 'Username already taken.')
+            else:
+                user.username = new_username
+        
+        user.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('profile')
+    
+    return render(request, 'profile.html', {'user': request.user})
+
+@login_required(login_url='login')
+def order_history(request):
+    """Display user's order history"""
+    # Sample order data - in a real app, this would come from a database
+    sample_orders = [
+        {
+            'id': 'LUM-1234',
+            'date': 'Oct 15, 2026',
+            'items': [
+                {'name': 'Lumina Pro', 'quantity': 1, 'price': 1299}
+            ],
+            'total': 1299,
+            'status': 'Delivered',
+            'status_class': 'active'
+        },
+        {
+            'id': 'LUM-5678',
+            'date': 'Oct 10, 2026',
+            'items': [
+                {'name': 'Lumina Air', 'quantity': 2, 'price': 999}
+            ],
+            'total': 1998,
+            'status': 'Processing',
+            'status_class': 'processing'
+        },
+        {
+            'id': 'LUM-9012',
+            'date': 'Oct 5, 2026',
+            'items': [
+                {'name': 'Lumina Core', 'quantity': 1, 'price': 799},
+                {'name': 'Lumina Mini', 'quantity': 1, 'price': 599}
+            ],
+            'total': 1398,
+            'status': 'Shipped',
+            'status_class': 'processing'
+        },
+    ]
+    
+    return render(request, 'order_history.html', {'orders': sample_orders})
 
 def register(request):
     """Create a new user using Django's User model on POST; render the form on GET."""
@@ -182,3 +325,75 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have been successfully logged out!")
     return redirect('home')
+
+# ============= NEW CART FUNCTIONALITY =============
+
+def add_to_cart(request):
+    """Shopping cart page - displays items added to cart"""
+    return render(request, 'add_to_cart.html')
+
+@login_required(login_url='login')
+def cart_data(request):
+    """API endpoint to get cart data for logged-in users"""
+    if request.method == 'GET':
+        # In a real app, you would fetch from database
+        # For now, return empty cart data
+        return JsonResponse({'status': 'success', 'cart': []})
+    
+    elif request.method == 'POST':
+        # Save cart to database for logged-in user
+        try:
+            data = json.loads(request.body)
+            cart_items = data.get('items', [])
+            
+            # Here you would save to database
+            # For now, just return success
+            return JsonResponse({'status': 'success', 'message': 'Cart saved successfully'})
+        except:
+            return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+
+@login_required(login_url='login')
+def checkout(request):
+    """Checkout page - process order"""
+    if request.method == 'POST':
+        # Process the order
+        # Get cart data, create order, clear cart, etc.
+        
+        # Sample order creation
+        order_id = f"LUM-{request.user.id}-{hash(request.user.username) % 10000}"
+        
+        messages.success(request, f'Order #{order_id} placed successfully! Thank you for your purchase.')
+        return redirect('order_confirmation', order_id=order_id)
+    
+    return render(request, 'checkout.html')
+
+@login_required(login_url='login')
+def order_confirmation(request, order_id):
+    """Order confirmation page"""
+    return render(request, 'order_confirmation.html', {'order_id': order_id})
+
+@login_required(login_url='login')
+def wishlist(request):
+    """User's wishlist page"""
+    # Sample wishlist data
+    wishlist_items = [
+        {'id': 101, 'name': 'Lumina Sphere', 'price': 1499, 'in_stock': True},
+        {'id': 102, 'name': 'Nova Buds Pro', 'price': 249, 'in_stock': True},
+        {'id': 103, 'name': 'Celestia Watch', 'price': 599, 'in_stock': False},
+    ]
+    
+    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+
+@login_required(login_url='login')
+def add_to_wishlist(request, product_id):
+    """Add product to wishlist"""
+    # In a real app, you would save to database
+    messages.success(request, f'Product added to wishlist!')
+    return redirect(request.META.get('HTTP_REFERER', 'products'))
+
+@login_required(login_url='login')
+def remove_from_wishlist(request, product_id):
+    """Remove product from wishlist"""
+    # In a real app, you would remove from database
+    messages.success(request, f'Product removed from wishlist!')
+    return redirect('wishlist')
